@@ -58,4 +58,3 @@ const createStore = (reducer) => {
 }
 
 export const store = createStore(rootReducer);
-

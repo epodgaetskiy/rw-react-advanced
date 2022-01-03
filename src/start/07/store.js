@@ -18,18 +18,17 @@ const postReducer = (state = { content: "" }, action) => {
   }
 }
 
-const combineReducers = (reducers) => {
-  return (state, action) => {
-    let nextState = {};
+const combineReducers = (reducers) => (state, action) => {
+  let nextState = {};
+  const reducerKeys = Object.keys(reducers);
+  reducerKeys.forEach(key => {
+    const reducer = reducers[key];
+    nextState[key] = reducer(state[key], action);
+  })
 
-    const reducerKeys = Object.keys(reducers);
-    reducerKeys.forEach(key => {
-      const reducer = reducers[key];
-      nextState[key] = reducer(state[key], action);
-    })
-    return nextState;
-  }
+  return nextState;
 }
+
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -49,7 +48,11 @@ const createStore = (reducer) => {
   dispatch({ type: 'INIT' });
   
   return {
-    dispatch,
+    dispatch: (action) => {
+      currentState = reducer(currentState, action);
+
+      subcribers.forEach(s => s());
+    },
     getState: () => currentState,
     subcribe: (callback) => {
       subcribers.push(callback);

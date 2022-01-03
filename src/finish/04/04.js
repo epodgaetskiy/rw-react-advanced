@@ -1,11 +1,11 @@
 import React from 'react';
-import { UserProvider, useUser, useDispatch } from './UserContext';
+import { Provider, useSelector, useDispatch } from './react-store';
 import { setFirstnameActionCreator } from './actions';
 
 const UserFirstName = () => {
-  const { user } = useUser();
+  const firstname = useSelector((state) => state.firstname);
   return (
-    <p>firstname: {user.firstname}</p>
+    <p>firstname: {firstname}</p>
   )
 }
 
@@ -18,13 +18,13 @@ const UserProfile = () => {
 }
 
 const FieldFirstName = () => {
-  const { user } = useUser();
+  const firstname = useSelector((state) => state.firstname);
   const dispatch = useDispatch();
   return (
     <div>
       <input
         name="firstname"
-        value={user.firstname}
+        value={firstname}
         onChange={(event) => {
           dispatch(setFirstnameActionCreator(event.target.value))
         }}
@@ -36,11 +36,10 @@ const FieldFirstName = () => {
 const App = () => {
   return (
     <div>
-      <UserProvider>
+      <Provider>
         <UserProfile />
         <FieldFirstName />
-      </UserProvider>
-      
+      </Provider>
     </div>
   )
 };
